@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './App.css'
 
 const letters = "abcdefghijklmnopqrstuvwxyz";
@@ -7,12 +7,14 @@ const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~";
 
 
 function App() {
+  // campi non controllati
+  const fullNameRef = useRef();
+  const specializationRef = useRef();
+  const experienceRef = useRef();
 
-  const [fullName, setFullName] = useState("");
+  // campi controllati
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [userSpecialization, setUserSpecialization] = useState("");
-  const [userExperience, setUserExperience] = useState("");
   const [userDescription, setUserDescription] = useState("");
 
   // validazione dello username
@@ -37,6 +39,12 @@ function App() {
   // all'invio del form se è tutto ok
   const submit = (e) => {
     e.preventDefault();
+
+    // raccolgo i valori dei campi non controllati usandro lo useRef
+    const fullName = fullNameRef.current.value;
+    const userSpecialization = specializationRef.current.value;
+    const userExperience = experienceRef.current.value;
+
 
     // creo una condizione per controllare se tutti i campi vengano compilati
     if (
@@ -73,18 +81,18 @@ function App() {
       alert("Controlla di aver soddisfatto le richieste da inserire");
       return;
     }
-
+    // stampa in console i dati inseriti
+    console.log("I tuoi dati sono stati inviati", {
+      fullName,
+      userName,
+      userPassword,
+      userSpecialization,
+      userExperience,
+      userDescription,
+    });
   };
 
-  // stampa in console i dati inseriti
-  console.log("I tuoi dati sono stati inviati", {
-    fullName,
-    userName,
-    userPassword,
-    userSpecialization,
-    userExperience,
-    userDescription,
-  });
+
 
 
 
@@ -101,20 +109,16 @@ function App() {
         <form className='form' onSubmit={submit} >
           {/* input per inserimento nome */}
           <section>
-
-
             <input
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              ref={fullNameRef}
               placeholder='Inserisci nome completo'
             />
-
-
           </section>
 
+
+          {/* input per inserimento username */}
           <section>
-            {/* input per inserimento username */}
             <input
               type="text"
               value={userName}
@@ -130,8 +134,9 @@ function App() {
             )}
           </section>
 
+
+          {/* input per inserimento password */}
           <section>
-            {/* input per inserimento password */}
             <input
               type="text"
               value={userPassword}
@@ -145,15 +150,14 @@ function App() {
                   : "Min 8 caratteri, 1 lettera, 1 numero, 1 simbolo"}
               </p>
             )}
-
           </section>
 
 
+
+          {/* select per inserimento specializzazione */}
           <section>
-            {/* select per inserimento specializzazione */}
             <select
-              value={userSpecialization}
-              onChange={(e) => setUserSpecialization(e.target.value)}
+              ref={specializationRef}
             >
               <option value="">Seleziona</option>
               <option value="Front-end">Front-end</option>
@@ -162,18 +166,23 @@ function App() {
             </select>
           </section>
 
+
+
+
+          {/* input per inserimento esperienza */}
           <section>
-            {/* input per inserimento esperienza */}
             <input
               type="number"
-              value={userExperience}
-              onChange={(e) => setUserExperience(e.target.value)}
+              ref={experienceRef}
               placeholder='Inserisci anni di esperienza'
             />
           </section>
 
+
+
+
+          {/* input per inserimento descrizione */}
           <section>
-            {/* input per inserimento descrizione */}
             <textarea
               value={userDescription}
               onChange={(e) => setUserDescription(e.target.value)}
@@ -183,16 +192,16 @@ function App() {
               <p style={{ color: isDescriptionValid() ? "green" : "red" }}>
                 {isDescriptionValid()
                   ? "Descrizione valida"
-                  : "Min 100 e max 1000 caratteri, senza spazi inutili"}
+                  : "Min 100 e max 1000 caratteri"}
               </p>
             )}
           </section>
 
+
+
+          {/* bottone di invio dei dati */}
           <section>
-
-            {/* bottone di invio dei dati */}
             <button type='submit'>Invia</button>
-
           </section>
         </form>
       </div>
